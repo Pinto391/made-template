@@ -1,19 +1,19 @@
 # Project Plan
 
 ## Title
- Impact of climate change affected crop yields in North and South America
+ Predict the future and past weather of some cities of North America
 
 ## Main Question
 
-How has climate change affected crop yields in North and South America, and what regions are most at risk for food insecurity?
+How was or will be the weather in a city of North America on a specific date?
 ## Description
-Compare previous and present climate metrics.
-Compare previous and present agriculture metrics.
-Compare some region's risk of food insecurity.
-Correlation analysis between Climate change and Agriculture.
+Compare previous weather data.
+
+Compare some city's weather data.
+Correlation analysis between some city's weather at a specific time.
 ## Datasources
 ### Datasource1:
-#### URL: [https://climateknowledgeportal.worldbank.org/]
+#### URL: [[https://climateknowledgeportal.worldbank.org/](https://www.kaggle.com/datasets/luisvivas/weather-north-america)]
 #### Description: Historical and projected climate data, including temperature and precipitation changes, tailored for country and regional analysis in North and South America.
 * Data Type: CSV
 
