@@ -1,0 +1,84 @@
+composite blocktype FiguresExtractor {
+    property url oftype text;
+
+    // Define inputs and outputs
+    input inputName oftype None;
+    output outputName oftype Sheet;
+
+    // Process flow for extracting data
+    inputName
+        -> FileExtractor
+        -> FileXLSXInterpreter
+        -> FiguresSheetPicker
+        -> outputName;
+
+    // Blocks inside the composite block
+    block FileExtractor oftype HttpExtractor {
+        url: url;
+    }
+
+    block FileXLSXInterpreter oftype XLSXInterpreter {}
+
+    block FiguresSheetPicker oftype SheetPicker {
+        sheetName: "Figure S5.1.2";
+    }
+}
+pipeline CountryStatsPipeline {
+    // Instantiate FiguresExtractor
+    block FiguresExtractorInstance oftype FiguresExtractor {
+        url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
+    }
+
+    // Bond Issuance processing
+    FiguresExtractorInstance
+        -> BondIssuanceDeleter
+        -> BondIssuanceTableInterpreter
+        -> BondIssuanceLoader;
+
+    block BondIssuanceDeleter oftype ColumnDeleter {
+        delete: [column B, column C];
+    }
+
+    block BondIssuanceTableInterpreter oftype TableInterpreter {
+        header: false;
+        columns: [
+            "Country Code" oftype CountryCodeAlpha3,
+            "Bond Issuance Share" oftype ZeroOneInterval
+        ];
+    }
+
+    block BondIssuanceLoader oftype SQLiteLoader {
+        table: "bondIssuance";
+        file: "./country-stats.sqlite";
+    }
+
+    // GDP Per Capita processing
+    FiguresExtractorInstance
+        -> GdpPerCapitaDeleter
+        -> GdpPerCapitaTableInterpreter
+        -> GdpPerCapitaLoader;
+
+    block GdpPerCapitaDeleter oftype ColumnDeleter {
+        delete: [column B, column D];
+    }
+
+    block GdpPerCapitaTableInterpreter oftype TableInterpreter {
+        header: false;
+        columns: [
+            "Country Code" oftype CountryCodeAlpha3,
+            "GDP per Capita" oftype decimal
+        ];
+    }
+
+    block GdpPerCapitaLoader oftype SQLiteLoader {
+        table: "gdpPerCapita";
+        file: "./country-stats.sqlite";
+    }
+}
+
+// Define custom value type and constraints
+valuetype ZeroOneInterval oftype decimal {
+    constraints: [ZeroOneIntervalConstraint];
+}
+
+constraint ZeroOneIntervalConstraint on decimal: value >= 0 and value <= 1;
