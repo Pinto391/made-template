@@ -12,8 +12,11 @@ Compare previous weather data.
 Compare some city's weather data.
 Correlation analysis between some city's weather at a specific time.
 ## Datasources
+
+#### URL: https://www.kaggle.com/api/v1/datasets/download/petalme/seattle-weather-prediction-dataset
 ### Datasource1:
 #### URL: [https://www.kaggle.com/api/v1/datasets/download/pinto391/380000-weather-data]
+
 #### Description: Historical weather data, including temperature and precipitation changes, tailored for country and regional analysis in North and South America.
 * Data Type: CSV
 
