@@ -1,11 +1,11 @@
 # Project Plan
 
 ## Title
-Analysis weather of some cities of North America
+Analysis of Weather Trends and Patterns for Prediction
 
 ## Main Question
 
-How was or will be the weather in a city of North America on a specific date?
+Which city has more precipitation at a specific time?
 ## Description
 Compare previous weather data.
 
@@ -13,7 +13,7 @@ Compare some city's weather data.
 Correlation analysis between some city's weather at a specific time.
 ## Datasources
 
-#### URL: https://www.kaggle.com/api/v1/datasets/download/petalme/seattle-weather-prediction-dataset
+#### URL: [https://www.kaggle.com/api/v1/datasets/download/petalme/seattle-weather-prediction-dataset]
 ### Datasource1:
 #### URL: [https://www.kaggle.com/api/v1/datasets/download/pinto391/380000-weather-data]
 
