@@ -1,7 +1,7 @@
 # Project Plan
 
 ## Title
- Predict the future and past weather of some cities of North America
+Analysis weather of some cities of North America
 
 ## Main Question
 
