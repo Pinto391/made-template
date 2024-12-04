@@ -1,0 +1,90 @@
+pipeline Temp_Pipeline {
+
+    
+    block DownloadZip oftype HttpExtractor {
+        url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
+    }
+
+  
+    block UnzipFile oftype ArchiveInterpreter {
+        archiveType: "zip";
+    }
+
+    
+    block PickCSV oftype FilePicker {
+        path: "/data.csv";
+    }
+
+    block ParseCSV oftype CSVInterpreter {
+        delimiter: ";";
+    }
+  
+    block Read_Raw_Data oftype TextFileInterpreter {}
+
+   
+
+    block Rename_Battery oftype CellWriter {
+        at: cell J1;
+        write: ["battery_temperature"];
+    }
+
+
+    block Rename_Headers oftype CellWriter {
+        at: range A1:E1;
+        write: ["id", "producer", "model", "month", "temperature"];
+    }
+
+ 
+    block Validate_Data oftype TableInterpreter {
+        header: true;
+        columns: [
+            "id" oftype integer,
+            "producer" oftype text,
+            "model" oftype text,
+            "month" oftype integer,
+            "temperature" oftype decimal,
+            "battery_temperature" oftype decimal
+        ];
+    }
+
+ 
+    transform CelsiusToFahrenheit {
+        from TempCelsius oftype decimal;
+        to TempFahrenheit oftype decimal;
+
+        TempFahrenheit: 32 + ((TempCelsius / 5) * 9);
+    }
+
+  
+    block Convert_Temparature oftype TableTransformer {
+        inputColumns: ["temperature"];
+        outputColumn: "temperature";
+        uses: CelsiusToFahrenheit;
+    }
+
+  
+    block Convert_Battery_Temparatures oftype TableTransformer {
+        inputColumns: ["battery_temperature"];
+        outputColumn: "battery_temperature";
+        uses: CelsiusToFahrenheit;
+    }
+
+ 
+    block Save_Data oftype SQLiteLoader {
+        table: "temperature";
+        file: "./temperature.sqlite";
+    }
+
+
+    DownloadZip 
+        -> UnzipFile
+        -> PickCSV 
+        -> Read_Raw_Data
+        -> ParseCSV
+        -> Rename_Battery
+        -> Rename_Headers
+        -> Validate_Data
+        -> Convert_Temparature
+        -> Convert_Battery_Temparatures
+        -> Save_Data;
+}
